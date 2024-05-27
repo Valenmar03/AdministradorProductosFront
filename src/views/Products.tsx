@@ -1,6 +1,16 @@
-import { Link } from "react-router-dom"
+import { Link, useLoaderData } from "react-router-dom"
+import { getProducts } from "../services/ProductService"
+import ProductDetails from "../components/ProductDetails"
+import { Product } from "../types"
+
+export async function loader(){
+  const products = await getProducts()
+  return products
+}
 
 function Products() {
+
+  const products = useLoaderData() as Product[]
   return (
     <>
       <div className="flex items-end justify-between">
@@ -13,6 +23,22 @@ function Products() {
         >
           Nuevo Producto
         </Link>
+      </div>
+      <div className="py-3">
+        <div className="w-full p-5 text-xl rounded-t-md border-b-2 border-blue-300 grid grid-flow-col mb-2 justify-between">
+          <p>Producto</p>
+          <p>Precio</p>
+          <p>Disponibilidad</p>
+          <p>Acciones</p>
+        </div>
+        {
+          products.map(product => (
+            <ProductDetails
+              key={product.id}
+              product={product}
+            />
+          ))
+        }
       </div>
     </>
   )
