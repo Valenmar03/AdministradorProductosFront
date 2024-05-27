@@ -4,10 +4,22 @@ import {
     useActionData,
     ActionFunctionArgs,
     redirect,
-    useLocation
+    LoaderFunctionArgs,
+    useLoaderData,
  } from "react-router-dom";
  import ErrorMessage from "../components/ErrorMessage";
- import { addProduct } from "../services/ProductService";
+ import { addProduct, getProductsById } from "../services/ProductService";
+import { Product } from "../types";
+
+ export async function loader({ params } : LoaderFunctionArgs){
+   if(params.id){
+      const product = await getProductsById(+params.id)
+      if(!product){
+         throw new Response('', { status: 404, statusText: 'Product not found'})
+      }
+      return product
+   }
+ }
  
  export async function action({ request }: ActionFunctionArgs) {
     const data = Object.fromEntries(await request.formData());
@@ -29,10 +41,8 @@ import {
  
  export default function EditProduct() {
     const res = useActionData() as {};
+    const product = useLoaderData() as Product
 
-    const location = useLocation()
-
-    console.log(location.state)
     return (
        <>
           <div className="flex items-end justify-between">
@@ -54,8 +64,8 @@ import {
                    type="text"
                    id="name"
                    name="name"
-                   defaultValue={location.state.product.name}
                    placeholder="Ingrese el nombre del producto"
+                   defaultValue={product.name}
                    className={`block p-3 border bg-gray-100 mt-2 
                    rounded-md w-full placeholder:text-lg text-lg
                    placeholder:text-zinc-500 outline-none
@@ -70,8 +80,8 @@ import {
                    type="number"
                    id="price"
                    name="price"
-                   defaultValue={location.state.product.price}
                    placeholder="Ingrese el precio del producto"
+                   defaultValue={product.price}
                    className={`block p-3 border bg-gray-100 mt-2 
                    rounded-md w-full placeholder:text-lg text-lg
                    placeholder:text-zinc-500 outline-none

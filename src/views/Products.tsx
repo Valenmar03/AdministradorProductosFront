@@ -25,20 +25,22 @@ function Products() {
         </Link>
       </div>
       <div className="py-3">
-        <div className="w-full p-5 text-xl rounded-t-md border-b-2 border-blue-300 grid grid-flow-col mb-2 justify-between">
+        <div className="w-full p-5 text-xl rounded-t-md border-b-2 border-blue-300 grid grid-cols-4 items-center">
           <p>Producto</p>
           <p>Precio</p>
-          <p>Disponibilidad</p>
-          <p>Acciones</p>
+          <p className="mx-auto">Disponibilidad</p>
+          <p className="ml-auto">Acciones</p>
         </div>
-        {
-          products.map(product => (
-            <ProductDetails
+        <div className="w-full">
+          {
+            products.map(product => (
+              <ProductDetails
               key={product.id}
               product={product}
-            />
-          ))
-        }
+              />
+            ))
+          }
+        </div>
       </div>
     </>
   )
