@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { formatCurrency } from "../helpers";
 import { Product } from "../types";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
@@ -7,6 +8,9 @@ type ProductDetailsProps = {
 };
 
 function ProductDetails({ product }: ProductDetailsProps) {
+
+   const navigate = useNavigate()
+
    const isAvailable = product.availability;
    return (
       <div className="w-full hover:bg-gray-100 p-3 text-xl rounded-t-md border-b-2 grid grid-flow-col justify-between items-center">
@@ -26,7 +30,13 @@ function ProductDetails({ product }: ProductDetailsProps) {
             {product.availability ? "Disponible" : "No Disponible"}
          </button>
          <div className="flex gap-2">
-            <button>
+            <button
+             onClick={()=> navigate(`/products/${product.id}/edit`, {
+               state: {
+                  product
+               }
+             })}
+            >
                <PencilSquareIcon className="size-9 p-1 text-blue-600 rounded hover:bg-blue-200 duration-300"/>
             </button>
             <button>
