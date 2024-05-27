@@ -1,6 +1,26 @@
-import { Link } from "react-router-dom";
+import { Link, Form, useActionData } from "react-router-dom";
+
+export async function action({request}){
+   const data = Object.fromEntries(await request.formData())
+   let error = []
+   if(Object.values(data).includes('')){
+      error.push('Todos los campos son obligatorios') 
+   }
+   if(data.price <= 0 && data.price !== ''){
+      error.push('El precio debe ser mayor a 0')
+   }
+   if(error.length > 0){
+      return error
+   }
+   return {}
+}
 
 export default function NewProduct() {
+
+   const error = useActionData()
+   console.log(error)
+
+
    return (
       <>
          <div className="flex items-end justify-between">
@@ -12,7 +32,10 @@ export default function NewProduct() {
                Ver Productos
             </Link>
          </div>
-         <form className="mt-10">
+         <Form 
+            className="mt-10"
+            method="POST"
+         >
             <div className="mb-5">
                <label htmlFor="name" className="text-2xl text-zinc-700">
                   Nombre
@@ -20,6 +43,7 @@ export default function NewProduct() {
                <input
                   type="text"
                   id="name"
+                  name="name"
                   placeholder="Ingrese el nombre del producto"
                   className="block p-3 border bg-gray-100 mt-2 rounded-md w-full placeholder:text-xl placeholder:text-zinc-500 outline-none"
                />
@@ -31,6 +55,7 @@ export default function NewProduct() {
                <input
                   type="number"
                   id="price"
+                  name="price"
                   placeholder="Ingrese el precio del producto"
                   className="block p-3 border bg-gray-100 mt-2 rounded-md w-full placeholder:text-xl placeholder:text-zinc-500 outline-none"
                />
@@ -40,7 +65,7 @@ export default function NewProduct() {
               className="text-white bg-indigo-600 w-full p-3 rounded-md text-xl uppercase font-bold cursor-pointer hover:bg-indigo-700 duration-200"
               value="Crear Producto"
             />
-         </form>
+         </Form>
       </>
    );
 }
