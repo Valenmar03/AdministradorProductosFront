@@ -43,6 +43,11 @@ function ProductDetails({ product }: ProductDetailsProps) {
             <Form
                method="POST"
                action={`/products/${product.id}/delete`}
+               onSubmit={(e) => {
+                  if(!confirm(`Desea eliminar ${product.name.trim()}?`)){
+                     e.preventDefault();
+                  }
+               }}
             >
                <button>
                   <TrashIcon className="size-9 p-1 text-red-600 rounded hover:bg-red-200 duration-300" />

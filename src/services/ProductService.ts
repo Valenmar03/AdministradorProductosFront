@@ -16,7 +16,7 @@ export async function addProduct(data : ProductData){
         if(result.success){
             const url = `${import.meta.env.VITE_API_URL}/api/products`
             await axios.post(url, {
-                name: result.output.name,
+                name: result.output.name.trim(),
                 price: result.output.price
             })
         }else{
@@ -67,7 +67,12 @@ export async function updateProduct(data : ProductData, id: Product['id']){
         })
         if(result.success){
             const url = `${import.meta.env.VITE_API_URL}/api/products/${id}`
-            await axios.put(url, result.output)
+            await axios.put(url, {
+                id: result.output.id,
+                name: result.output.name.trim(),
+                price: result.output.price,
+                availability: result.output.availability
+            })
         }
     } catch (error) {
         console.log(error)
