@@ -2,14 +2,17 @@ import { ActionFunctionArgs, Form, redirect, useNavigate } from "react-router-do
 import { formatCurrency } from "../helpers";
 import { Product } from "../types";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { deleteProduct } from "../services/ProductService";
 
 type ProductDetailsProps = {
    product: Product;
 };
 
 export async function action({ params }: ActionFunctionArgs) {
-   
-   return redirect('/');
+   if(params.id !== undefined){
+      await deleteProduct(+params.id)
+      return redirect('/');
+   }
 }
 
 function ProductDetails({ product }: ProductDetailsProps) {
