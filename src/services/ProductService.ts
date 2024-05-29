@@ -1,6 +1,7 @@
 import { safeParse } from "valibot";
 import axios from "axios";
 import { DraftProductSchema, Product, ProductSchema, ProductsSchema } from "../types"
+import { strToBoolean } from "../helpers";
 
 type ProductData = {
     [k: string]: FormDataEntryValue;
@@ -52,6 +53,23 @@ export async function getProductsById(id : Product['id']){
             throw new Error('Error obteniendo los productos...')
         }
     }catch (error) {
-        
+        console.log(error)
+    }
+}
+
+export async function updateProduct(data : ProductData, id: Product['id']){
+    try {
+        const result = safeParse(ProductSchema, {
+            id,
+            name: data.name,
+            price: +data.price,
+            availability: strToBoolean(data.availability.toString())
+        })
+        if(result.success){
+            const url = `${import.meta.env.VITE_API_URL}/api/products/${id}`
+            await axios.put(url, result.output)
+        }
+    } catch (error) {
+        console.log(error)
     }
 }

@@ -3,3 +3,7 @@ export function formatCurrency(price: number) {
         style: 'currency', currency: 'USD'
     }).format(price);
 }
+
+export function strToBoolean(str: string) {
+    return str.toLowerCase() === 'true' ? true : false;
+}
