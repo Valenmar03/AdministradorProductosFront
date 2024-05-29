@@ -1,4 +1,10 @@
-import { ActionFunctionArgs, Form, redirect, useNavigate } from "react-router-dom";
+import {
+   ActionFunctionArgs,
+   Form,
+   redirect,
+   useFetcher,
+   useNavigate,
+} from "react-router-dom";
 import { formatCurrency } from "../helpers";
 import { Product } from "../types";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
@@ -9,13 +15,15 @@ type ProductDetailsProps = {
 };
 
 export async function action({ params }: ActionFunctionArgs) {
-   if(params.id !== undefined){
-      await deleteProduct(+params.id)
-      return redirect('/');
+   if (params.id !== undefined) {
+      await deleteProduct(+params.id);
+      return redirect("/");
    }
 }
 
 function ProductDetails({ product }: ProductDetailsProps) {
+
+   const fetcher = useFetcher()
    const navigate = useNavigate();
 
    const isAvailable = product.availability;
@@ -27,15 +35,22 @@ function ProductDetails({ product }: ProductDetailsProps) {
          <div>
             <p>{formatCurrency(product.price)}</p>
          </div>
-         <button
-            className={
-               isAvailable
-                  ? "p-2 rounded-md text-blue-700 hover:bg-blue-200 duration-300 mx-auto"
-                  : "p-2 rounded-md text-red-700 hover:bg-red-200 duration-300 mx-auto"
-            }
-         >
-            {product.availability ? "Disponible" : "No Disponible"}
-         </button>
+         <div className="mx-auto">
+            <fetcher.Form method="POST">
+               <button
+                  name="id"
+                  value={product.id.toString()}
+                  className={`p-2 rounded-md duration-300 mx-auto
+                     ${
+                        isAvailable
+                           ? "text-blue-700 hover:bg-blue-200"
+                           : "text-red-700 hover:bg-red-200"
+                     }`}
+               >
+                  {isAvailable ? "Disponible" : "No Disponible"}
+               </button>
+            </fetcher.Form>
+         </div>
          <div className="flex gap-2 ml-auto">
             <button onClick={() => navigate(`/products/${product.id}/edit`)}>
                <PencilSquareIcon className="size-9 p-1 text-blue-600 rounded hover:bg-blue-200 duration-300" />
@@ -44,7 +59,7 @@ function ProductDetails({ product }: ProductDetailsProps) {
                method="POST"
                action={`/products/${product.id}/delete`}
                onSubmit={(e) => {
-                  if(!confirm(`Desea eliminar ${product.name.trim()}?`)){
+                  if (!confirm(`Desea eliminar ${product.name.trim()}?`)) {
                      e.preventDefault();
                   }
                }}
