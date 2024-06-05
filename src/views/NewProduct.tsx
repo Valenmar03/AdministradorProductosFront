@@ -30,7 +30,6 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function NewProduct() {
    const res = useActionData() as {};
 
-   console.log(res)
    return (
       <>
          <div className="flex items-end justify-between">
