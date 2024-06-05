@@ -30,6 +30,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function NewProduct() {
    const res = useActionData() as {};
 
+   console.log(res)
    return (
       <>
          <div className="flex items-end justify-between">
@@ -41,7 +42,7 @@ export default function NewProduct() {
                Ver Productos
             </Link>
          </div>
-         {res && (Object.values(res)[0] === 'Todos los campos son obligatorios' && <ErrorMessage>{Object.values(res)}</ErrorMessage>)}
+         {res && (Object.values(res)[0] === 'Todos los campos son obligatorios' && <ErrorMessage>Todos los campos son obligatorios</ErrorMessage>)}
          <Form className="mt-10" method="POST">
             <ProductForm
                res={res}
